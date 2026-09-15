@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import math
-from typing import Any
+from typing import Any, Callable
 
 
 class RobotCleanerATD(ABC):
@@ -241,7 +241,7 @@ class StopCommand(CommandATD):
 
 
 def main() -> None:
-    function_by_command = {
+    function_by_command: dict[str, CommandATD] = {
         "move": MoveCommand(),
         "turn": TurnCommand(),
         "set": SetCommand(),
@@ -250,11 +250,11 @@ def main() -> None:
     }
     commands = ["move 100", "turn -90", "set soap", "start", "move 50", "stop"]
 
-    robot = RobotCleaner()
+    robot: RobotCleanerATD = RobotCleaner()
     for command in commands:
         parametrs: list[str] = command.split(" ")
         command_name, args = parametrs[0], parametrs[1:]
-        command_function = function_by_command[command_name]
+        command_function: CommandATD = function_by_command[command_name]
         command_function.execute(robot, *args)
 
 
