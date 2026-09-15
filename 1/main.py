@@ -100,15 +100,14 @@ class RobotCleanerATD(ABC):
 
 
 class RobotCleaner(RobotCleanerATD):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._x: int = 0
         self._y: int = 0
         self._angle: int = 0
-        self._available_devices: list[str] = [""]
-        self._available_devices.extend(["soap", "water", "brush"])
+        self._available_devices: list[str] = ["soap", "water", "brush"]
         self._is_device_on: bool = False
-        self._selected_device: str = self._available_devices[0]
+        self._selected_device: str = "water"
 
     def move(self, meters: int) -> None:
         if meters < 0:
@@ -168,7 +167,7 @@ class RobotCleaner(RobotCleanerATD):
 class CommandATD(ABC):
 
     @abstractmethod
-    def execute(self, robot, *args):
+    def execute(self, robot: RobotCleanerATD, *args: str) -> None:
         pass
 
     @abstractmethod
@@ -178,10 +177,10 @@ class CommandATD(ABC):
 
 class MoveCommand(CommandATD):
 
-    def __init__(self):
-        self._result = None
+    def __init__(self) -> None:
+        self._result: Any = None
 
-    def execute(self, robot, *args):
+    def execute(self, robot: RobotCleanerATD, *args: str) -> None:
         self._result = robot.move(int(args[0]))
         print("POS", f"{robot.get_x()}, {robot.get_y()}")
 
@@ -191,10 +190,10 @@ class MoveCommand(CommandATD):
 
 class TurnCommand(CommandATD):
 
-    def __init__(self):
-        self._result = None
+    def __init__(self) -> None:
+        self._result: Any = None
 
-    def execute(self, robot, *args):
+    def execute(self, robot: RobotCleanerATD, *args: str) -> None:
         self._result = robot.turn(int(args[0]))
         print("ANGLE", robot.get_angle())
 
@@ -204,10 +203,10 @@ class TurnCommand(CommandATD):
 
 class SetCommand(CommandATD):
 
-    def __init__(self):
-        self._result = None
+    def __init__(self) -> None:
+        self._result: Any = None
 
-    def execute(self, robot, *args):
+    def execute(self, robot: RobotCleanerATD, *args: str) -> None:
         self._result = robot.set(args[0])
         print("STATE", robot.get_selected_device())
 
@@ -217,10 +216,10 @@ class SetCommand(CommandATD):
 
 class StartCommand(CommandATD):
 
-    def __init__(self):
-        self._result = None
+    def __init__(self) -> None:
+        self._result: Any = None
 
-    def execute(self, robot, *args):
+    def execute(self, robot: RobotCleanerATD, *args: str) -> None:
         self._result = robot.start()
         print("START WITH", robot.get_selected_device())
 
@@ -230,10 +229,10 @@ class StartCommand(CommandATD):
 
 class StopCommand(CommandATD):
 
-    def __init__(self):
-        self._result = None
+    def __init__(self) -> None:
+        self._result: Any = None
 
-    def execute(self, robot, *args):
+    def execute(self, robot: RobotCleanerATD, *args: str) -> None:
         self._result = robot.stop()
         print("STOP")
 
@@ -241,7 +240,7 @@ class StopCommand(CommandATD):
         return self._result
 
 
-def main():
+def main() -> None:
     function_by_command = {
         "move": MoveCommand(),
         "turn": TurnCommand(),
